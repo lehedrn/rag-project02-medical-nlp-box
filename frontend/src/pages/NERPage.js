@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { AlertCircle } from 'lucide-react';
 import { TextInput } from '../components/shared/ModelOptions';
+import { API_BASE_URL } from '../App';
 
 const color_map = {
   'DATE': "#FF9800", // 原色
@@ -83,7 +84,7 @@ const NERPage = () => {
   const handleSubmit = async () => {
     setIsLoading(true);
     try {
-      const response = await fetch('http://172.20.116.213:8000/api/ner', {
+      const response = await fetch(`${API_BASE_URL}/api/ner`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { AlertCircle } from 'lucide-react';
 import { LLMOptions, EmbeddingOptions, TextInput } from '../components/shared/ModelOptions';
+import { API_BASE_URL } from '../App';
 
 const AbbrPage = () => {
   const [input, setInput] = useState('');
@@ -48,7 +49,7 @@ const AbbrPage = () => {
   const handleSubmit = async () => {
     setIsLoading(true);
     try {
-      const response = await fetch('http://172.20.116.213:8000/api/abbr', {
+      const response = await fetch(`${API_BASE_URL}/api/abbr`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

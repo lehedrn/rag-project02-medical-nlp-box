@@ -93,7 +93,7 @@ client.create_index(
 )
 
 # 批量处理
-batch_size = 1024
+batch_size = 256
 
 for start_idx in tqdm(range(0, len(df), batch_size), desc="Processing batches"):
     end_idx = min(start_idx + batch_size, len(df))

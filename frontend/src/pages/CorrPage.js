@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { AlertCircle } from 'lucide-react';
 import { LLMOptions, TextInput } from '../components/shared/ModelOptions';
+import { API_BASE_URL } from '../App';
 
 const CorrPage = () => {
   const [input, setInput] = useState('');
@@ -24,7 +25,7 @@ const CorrPage = () => {
   const handleSubmit = async () => {
     setIsLoading(true);
     try {
-      const response = await fetch('http://172.20.116.213:8000/api/corr', {
+      const response = await fetch(`${API_BASE_URL}/api/corr`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

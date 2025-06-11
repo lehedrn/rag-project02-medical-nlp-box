@@ -7,6 +7,9 @@ import CorrPage from './pages/CorrPage';
 import AbbrPage from './pages/AbbrPage';
 import GenPage from './pages/GenPage';
 
+// 全局API基础URL
+export const API_BASE_URL = 'http://localhost:8000';
+
 const WelcomePage = () => {
   return (
     <div className="flex flex-col items-center justify-center h-full">
