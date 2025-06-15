@@ -26,6 +26,9 @@ const Sidebar = ({ width }) => {
         <Link to="/stand" className="flex items-center p-3 text-gray-700 hover:bg-gray-100">
           <FileCheck className="mr-3" /> 医疗术语标准化
         </Link>
+        <Link to="/finstand" className="flex items-center p-3 text-gray-700 hover:bg-gray-100">
+          <FileCheck className="mr-3" /> 金融术语标准化
+        </Link>
         <Link to="/abbr" className="flex items-center p-3 text-gray-700 hover:bg-gray-100">
           <BookOpen className="mr-3" /> 医疗缩写展开
         </Link>

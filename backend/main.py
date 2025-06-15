@@ -1,6 +1,7 @@
 from fastapi import FastAPI, HTTPException, Request
 from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel, Field, ConfigDict
+from services.finstd_service import FinStdService
 from services.finner_service import FinNerService
 from services.ner_service import NERService
 from services.std_service import StdService
@@ -32,6 +33,10 @@ standardization_service = StdService()  # 术语标准化服务
 abbr_service = AbbrService()  # 缩写扩展服务
 gen_service = GenService()  # 文本生成服务
 corr_service = CorrService()  # 拼写纠正服务
+
+finner_service = FinNerService()  # 金融命名实体识别服务
+finstandardization_service = FinStdService()  # 金融术语标准化服务
+
 
 # 基础模型类
 class BaseInputModel(BaseModel):
@@ -293,13 +298,58 @@ async def generate_medical_content(input: GenInput):
 async def finner(input: TextInput):
     try:
         logger.info(f"Received FinNER request: text={input.text}, termTypes={input.termTypes}")
-        finner_service = FinNerService()
         results = finner_service.process(input.text, input.termTypes)
         return results
     except Exception as e:
         logger.error(f"Error in FinNER processing: {str(e)}")
         raise HTTPException(status_code=500, detail=str(e))
 
+# API 端点：金融术语标准化
+@app.post("/api/finstd")
+async def standardization(input: TextInput):
+    try:
+        # 记录请求信息
+        logger.info(f"Received request: text={input.text}, options={input.options}, embeddingOptions={input.embeddingOptions}")
+
+        # 配置术语类型
+        all_financial_terms = input.options.pop('allFinancialTerms', False)
+        term_types = {'allFinancialTerms': all_financial_terms}
+
+        # 进行命名实体识别
+        ner_results = finner_service.process(input.text, term_types)
+
+        # 初始化标准化服务
+        finstandardization_service = FinStdService(
+            provider=input.embeddingOptions.provider,
+            model=input.embeddingOptions.model,
+            db_path=f"db/{input.embeddingOptions.dbName}.db",
+            collection_name=input.embeddingOptions.collectionName
+        )
+
+        # 获取识别到的实体
+        entities = ner_results.get('entities', [])
+        if not entities:
+            return {"message": "No medical terms have been recognized", "standardized_terms": []}
+
+        # 标准化每个实体
+        standardized_results = []
+        for entity in entities:
+            std_result = finstandardization_service.search_similar_terms(entity['word'])
+            standardized_results.append({
+                "original_term": entity['word'],
+                "entity_group": entity['entity_group'],
+                "standardized_results": std_result
+            })
+
+        return {
+            "message": f"{len(entities)} financial terms have been recognized and standardized",
+            "standardized_terms": standardized_results
+        }
+
+    except Exception as e:
+        logger.error(f"Error in standardization processing: {str(e)}")
+        raise HTTPException(status_code=500, detail=str(e))
+    
 # 启动服务器
 if __name__ == "__main__":
     import uvicorn
