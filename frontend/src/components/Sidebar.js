@@ -32,6 +32,9 @@ const Sidebar = ({ width }) => {
         <Link to="/abbr" className="flex items-center p-3 text-gray-700 hover:bg-gray-100">
           <BookOpen className="mr-3" /> 医疗缩写展开
         </Link>
+        <Link to="/finabbr" className="flex items-center p-3 text-gray-700 hover:bg-gray-100">
+          <BookOpen className="mr-3" /> 金融术语缩写展开
+        </Link>
         <Link to="/corr" className="flex items-center p-3 text-gray-700 hover:bg-gray-100">
           <FileEdit className="mr-3" /> 医疗记录纠错
         </Link>        

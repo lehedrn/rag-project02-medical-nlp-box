@@ -1,6 +1,7 @@
 from fastapi import FastAPI, HTTPException, Request
 from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel, Field, ConfigDict
+from services.finabbr_service import FinAbbrService
 from services.finstd_service import FinStdService
 from services.finner_service import FinNerService
 from services.ner_service import NERService
@@ -36,6 +37,8 @@ corr_service = CorrService()  # 拼写纠正服务
 
 finner_service = FinNerService()  # 金融命名实体识别服务
 finstandardization_service = FinStdService()  # 金融术语标准化服务
+finabbr_service = FinAbbrService()  # 金融术语缩写扩展服务
+
 
 
 # 基础模型类
@@ -349,7 +352,35 @@ async def standardization(input: TextInput):
     except Exception as e:
         logger.error(f"Error in standardization processing: {str(e)}")
         raise HTTPException(status_code=500, detail=str(e))
-    
+
+# API 端点：缩写扩展
+@app.post("/api/finabbr")
+async def expand_abbreviations(input: AbbrInput):
+    try:
+        if input.method == "simple_ollama":  # 简单扩展
+            output = finabbr_service.simple_ollama_expansion(input.text, input.llmOptions)
+            return {"input": input.text, "output": output}
+        elif input.method == "query_db_llm_rerank":  # 数据库查询+重排序
+            return finabbr_service.query_db_llm_rerank(
+                input.text, 
+                input.context, 
+                input.llmOptions,
+                input.embeddingOptions.model_dump()
+            )
+        elif input.method == "llm_rank_query_db":  # LLM扩展+数据库标准化
+            logger.info(f"embeddingOptions: {input.embeddingOptions}")
+            return finabbr_service.llm_rank_query_db(
+                input.text, 
+                input.context, 
+                input.llmOptions,
+                input.embeddingOptions.model_dump()
+            )
+        else:
+            raise HTTPException(status_code=400, detail="Invalid method")
+    except Exception as e:
+        logger.error(f"Error in abbreviation expansion: {str(e)}")
+        raise HTTPException(status_code=500, detail=str(e))
+
 # 启动服务器
 if __name__ == "__main__":
     import uvicorn

@@ -8,6 +8,7 @@ import AbbrPage from './pages/AbbrPage';
 import GenPage from './pages/GenPage';
 import FinnerPage from './pages/FinnerPage';
 import FinStdPage from './pages/FinStdPage';
+import FinAbbrPage from './pages/FinAbbrPage';
 
 // 全局API基础URL
 export const API_BASE_URL = 'http://localhost:8000';
@@ -51,6 +52,7 @@ const App = () => {
             <Route path="/finstand" element={<FinStdPage />} />
             <Route path="/corr" element={<CorrPage />} />
             <Route path="/abbr" element={<AbbrPage />} />
+            <Route path="/finabbr" element={<FinAbbrPage />} />
             <Route path="/gen" element={<GenPage />} />
           </Routes>
         </main>
