@@ -20,6 +20,9 @@ const Sidebar = ({ width }) => {
         <Link to="/ner" className="flex items-center p-3 text-gray-700 hover:bg-gray-100">
           <Stethoscope className="mr-3" /> 医疗命名实体识别
         </Link>
+        <Link to="/finner" className="flex items-center p-3 text-gray-700 hover:bg-gray-100">
+          <Stethoscope className="mr-3" /> 金融术语命名实体识别
+        </Link>
         <Link to="/stand" className="flex items-center p-3 text-gray-700 hover:bg-gray-100">
           <FileCheck className="mr-3" /> 医疗术语标准化
         </Link>

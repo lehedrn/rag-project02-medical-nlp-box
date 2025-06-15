@@ -1,6 +1,7 @@
 from fastapi import FastAPI, HTTPException, Request
 from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel, Field, ConfigDict
+from services.finner_service import FinNerService
 from services.ner_service import NERService
 from services.std_service import StdService
 from services.abbr_service import AbbrService
@@ -285,6 +286,18 @@ async def generate_medical_content(input: GenInput):
             raise HTTPException(status_code=400, detail="Invalid method")
     except Exception as e:
         logger.error(f"Error in medical content generation: {str(e)}")
+        raise HTTPException(status_code=500, detail=str(e))
+
+# API 端点：金融命名实体识别
+@app.post("/api/finner")
+async def finner(input: TextInput):
+    try:
+        logger.info(f"Received FinNER request: text={input.text}, termTypes={input.termTypes}")
+        finner_service = FinNerService()
+        results = finner_service.process(input.text, input.termTypes)
+        return results
+    except Exception as e:
+        logger.error(f"Error in FinNER processing: {str(e)}")
         raise HTTPException(status_code=500, detail=str(e))
 
 # 启动服务器
