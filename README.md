@@ -1,4 +1,4 @@
-# 医疗网站项目
+# 金融网站项目——基于医疗网站项目的二次开发
 
 一个使用 Next.js 和 Tailwind CSS 构建的现代化、响应式医疗网站，提供全面的医疗服务平台。 
 <a href="https://u.geekbang.org/subject/airag/1009927"> 极客时间RAG进阶训练营</a>
@@ -7,7 +7,7 @@
 
 
 
-![医疗网站首页](frontend/public/images/medical-page.png)
+![医疗网站首页](frontend/public/images/finance-page.png)
 
 
 ## 功能特点
