@@ -84,7 +84,7 @@ const FinnerPage = () => {
 
   return (
     <div className="max-w-2xl mx-auto">
-      <h1 className="text-3xl font-bold mb-6">金融术语命名实体识别 🏥</h1>
+      <h1 className="text-3xl font-bold mb-6">金融术语命名实体识别 📈</h1>
       <div className="bg-white shadow-md rounded-lg p-6 mb-6">
         <h2 className="text-xl font-semibold mb-4">输入金融语句文本</h2>
         <TextInput
