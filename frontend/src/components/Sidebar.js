@@ -37,7 +37,10 @@ const Sidebar = ({ width }) => {
         </Link>
         <Link to="/corr" className="flex items-center p-3 text-gray-700 hover:bg-gray-100">
           <FileEdit className="mr-3" /> 医疗记录纠错
-        </Link>        
+        </Link>      
+        <Link to="/fincorr" className="flex items-center p-3 text-gray-700 hover:bg-gray-100">
+          <FileEdit className="mr-3" /> 金融记录纠错
+        </Link>  
         <Link to="/gen" className="flex items-center p-3 text-gray-700 hover:bg-gray-100">
           <FileText className="mr-3" /> 医疗内容生成
         </Link>

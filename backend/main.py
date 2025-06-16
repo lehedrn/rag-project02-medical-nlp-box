@@ -1,6 +1,7 @@
 from fastapi import FastAPI, HTTPException, Request
 from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel, Field, ConfigDict
+from services.fincorr_service import FinCorrService
 from services.finabbr_service import FinAbbrService
 from services.finstd_service import FinStdService
 from services.finner_service import FinNerService
@@ -38,6 +39,7 @@ corr_service = CorrService()  # 拼写纠正服务
 finner_service = FinNerService()  # 金融命名实体识别服务
 finstandardization_service = FinStdService()  # 金融术语标准化服务
 finabbr_service = FinAbbrService()  # 金融术语缩写扩展服务
+fincorr_service = FinCorrService()  # 金融拼写纠正服务
 
 
 
@@ -353,9 +355,9 @@ async def standardization(input: TextInput):
         logger.error(f"Error in standardization processing: {str(e)}")
         raise HTTPException(status_code=500, detail=str(e))
 
-# API 端点：缩写扩展
+# API 端点：金融术语缩写扩展
 @app.post("/api/finabbr")
-async def expand_abbreviations(input: AbbrInput):
+async def expand_finabbreviations(input: AbbrInput):
     try:
         if input.method == "simple_ollama":  # 简单扩展
             output = finabbr_service.simple_ollama_expansion(input.text, input.llmOptions)
@@ -379,6 +381,20 @@ async def expand_abbreviations(input: AbbrInput):
             raise HTTPException(status_code=400, detail="Invalid method")
     except Exception as e:
         logger.error(f"Error in abbreviation expansion: {str(e)}")
+        raise HTTPException(status_code=500, detail=str(e))
+
+# API 端点：金融记录拼写纠正
+@app.post("/api/fincorr")
+async def correct_financial_notes(input: CorrInput):
+    try:
+        if input.method == "correct_spelling":  # 拼写纠正
+            return fincorr_service.correct_spelling(input.text, input.llmOptions)
+        elif input.method == "add_mistakes":  # 添加错误（测试用）
+            return fincorr_service.add_mistakes(input.text, input.errorOptions)
+        else:
+            raise HTTPException(status_code=400, detail="Invalid method")
+    except Exception as e:
+        logger.error(f"Error in correction processing: {str(e)}")
         raise HTTPException(status_code=500, detail=str(e))
 
 # 启动服务器

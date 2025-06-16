@@ -9,9 +9,11 @@ import GenPage from './pages/GenPage';
 import FinnerPage from './pages/FinnerPage';
 import FinStdPage from './pages/FinStdPage';
 import FinAbbrPage from './pages/FinAbbrPage';
+import FinCorrPage from './pages/FinCorrPage';
 
 // 全局API基础URL
-export const API_BASE_URL = 'http://localhost:8000';
+const hostname = window.location.hostname;
+export const API_BASE_URL = `http://${hostname}:8000`;
 
 const WelcomePage = () => {
   return (
@@ -51,6 +53,7 @@ const App = () => {
             <Route path="/stand" element={<StdPage />} />
             <Route path="/finstand" element={<FinStdPage />} />
             <Route path="/corr" element={<CorrPage />} />
+            <Route path="/fincorr" element={<FinCorrPage />} />
             <Route path="/abbr" element={<AbbrPage />} />
             <Route path="/finabbr" element={<FinAbbrPage />} />
             <Route path="/gen" element={<GenPage />} />
